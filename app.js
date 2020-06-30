@@ -3,11 +3,16 @@ const seats = document.querySelectorAll(".row .seat:not(.occupied)");
 const count = document.getElementById("count");
 const total = document.getElementById("total");
 const movieSelect = document.getElementById("movie");
+let movieName = document.getElementById("movie-name");
 ///Call function to get data from local storage and populate in UI
 populateUI();
 ///ticket price for the selected seat
 let ticketPrice = +movieSelect.value; ///by putting + we can convert the string to number. This is easier than using ParseInt
 //Set selected movie index and price in Local storage
+movieNameWithPrice = movieSelect.selectedOptions[0].text;
+const regex = /\([^()]*\)/g;
+movieName.innerText = movieNameWithPrice.replace(regex, "");
+
 function setMovieData(movieIndex, moviePrice) {
   localStorage.setItem("selectedMovieIndex", movieIndex);
   localStorage.setItem("selectedMoviePrice", moviePrice);
@@ -48,6 +53,7 @@ function populateUI() {
   if (selectedMovieIndex !== null) {
     movieSelect.selectedIndex = selectedMovieIndex;
   }
+  const selectedMovie = localStorage.getItem("selectedMovieIndex");
 }
 ///Seat Click Event Listener
 ///Selecting a Seat - we want to add the class .selected to the seat that we have clicked on
@@ -67,6 +73,9 @@ container.addEventListener("click", (e) => {
 //Movie select event listener
 movieSelect.addEventListener("change", (e) => {
   ticketPrice = +e.target.value;
+  movieNameWithPrice = e.target.selectedOptions[0].text; //ref: https://stackoverflow.com/questions/14976495/get-selected-option-text-with-javascript and https://stackoverflow.com/questions/14976495/get-selected-option-text-with-javascript
+  const regex = /\([^()]*\)/g; ///regex ref: https://stackoverflow.com/questions/640001/how-can-i-remove-text-within-parentheses-with-a-regex
+  movieName.innerText = movieNameWithPrice.replace(regex, "");
   setMovieData(e.target.selectedIndex, e.target.value); ///https://developer.mozilla.org/en-US/docs/Web/API/HTMLSelectElement/selectedIndex
   updateSelectedSeatCount();
 
